@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#090909"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="MedRit">
+<link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="icon-192.png"><title>MedRit</title>
+<style>
+:root{color-scheme:dark;--bg:#080808;--panel:#1d1d1f;--panel2:#29292c;--line:#38383b;--txt:#f7f7f8;--muted:#99999f;--accent:#ff913d;--accent2:#bd5e19;--red:#ff7777}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding-top:env(safe-area-inset-top);padding-bottom:calc(88px + env(safe-area-inset-bottom))}
+header{padding:25px 20px 12px;max-width:760px;margin:auto}h1{font-size:34px;letter-spacing:-.7px;margin:0 0 5px}h2{font-size:21px;margin:0 0 13px}h3{font-size:17px;margin:0 0 5px}.muted{color:var(--muted)}.small{font-size:12px;color:var(--muted);line-height:1.45}
+main{max-width:760px;margin:auto;padding:6px 16px 28px}.page{display:none}.page.active{display:block}
+.card{background:var(--panel);border-radius:22px;padding:17px;margin:12px 0;border:1px solid #252527}.row{display:flex;align-items:center;justify-content:space-between;gap:12px}.rowstart{display:flex;align-items:center;gap:12px}.stack{display:flex;flex-direction:column;gap:5px}
+button,.btn{font:inherit;font-weight:650;border:0;border-radius:14px;padding:13px 16px;background:var(--accent);color:#17100a;cursor:pointer}button.secondary{background:var(--panel2);color:var(--txt)}button.ghost{background:transparent;color:var(--accent);padding:8px}button.danger{background:#48272a;color:#ffdada}button:disabled{opacity:.35}
+nav{position:fixed;bottom:0;left:0;right:0;z-index:10;display:grid;grid-template-columns:repeat(4,1fr);gap:3px;padding:9px 8px calc(9px + env(safe-area-inset-bottom));background:#19191bf2;backdrop-filter:blur(20px);border:1px solid #343438;border-radius:30px;margin:0 10px 8px}
+nav button{background:transparent;color:var(--muted);padding:8px 2px;font-size:12px;border-radius:22px}nav button.active{background:#38383b;color:var(--accent)}nav .ico{display:block;font-size:22px;margin-bottom:3px}
+.statgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.stat{background:var(--panel);border-radius:18px;padding:15px}.stat b{display:block;font-size:27px;margin-top:4px}
+.medline{padding:15px 0;border-top:1px solid var(--line)}.medline:first-child{border-top:0}.qty{font-size:23px;font-weight:700;font-variant-numeric:tabular-nums}
+label{display:block;color:var(--muted);font-size:13px;margin:11px 0 5px}input,select{width:100%;padding:13px;background:#111113;color:var(--txt);border:1px solid var(--line);border-radius:12px;font:inherit}
+.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.full{grid-column:1/-1}.seg{display:flex;background:#303034;padding:4px;border-radius:20px;gap:4px}.seg button{flex:1;background:transparent;color:#eee;padding:10px 5px}.seg button.active{background:#66666c;color:white}
+.timer{border-top:1px solid var(--line);padding:15px 0}.timer:first-child{border-top:0}.clock{font-size:30px;font-weight:750;font-variant-numeric:tabular-nums;letter-spacing:1px}.pill{font-size:12px;color:var(--accent);background:#3b2619;padding:5px 9px;border-radius:30px}
+.calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}.day{background:#111113;color:var(--txt);border:1px solid var(--line);padding:8px 0;border-radius:10px;min-height:43px;font-size:13px}.day.has:after{content:"";display:block;width:5px;height:5px;background:var(--accent);border-radius:50%;margin:4px auto 0}.day.selected{outline:2px solid var(--accent)}.blank{visibility:hidden}
+.hero{position:relative;overflow:hidden;border-radius:22px;height:210px;margin:8px 0 18px;border:1px solid #39302a;background:#151515}.hero img{width:100%;height:100%;object-fit:cover;object-position:center 38%;display:block;filter:saturate(1.08)}.hero:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.82),rgba(0,0,0,.03) 72%)}.hero-copy{position:absolute;z-index:1;left:16px;right:16px;bottom:14px;text-shadow:0 2px 10px #000}.hero-copy strong{display:block;font-size:24px;letter-spacing:-.5px}.hero-copy span{font-size:12px;color:#f4d5bd}.notice{background:#24201c;color:#d4c0ae;border-radius:13px;padding:12px;font-size:12px;line-height:1.5;margin:12px 0}
+hr{border:0;border-top:1px solid var(--line);margin:14px 0}
+</style></head><body>
+<header><div class="row"><div><h1>MedRit</h1><div class="small" id="dateHeading"></div></div><span class="pill">PERSONAL TRACKER</span></div></header>
+<main>
+<section id="stopwatches" class="page active">
+ <div class="hero"><img src="groot-hero.png" alt="A funny close-up portrait of a tree-like character"><div class="hero-copy"><strong>MEDRIT.</strong><span>Even Groot remembers to keep track.</span></div></div>
+ <div class="row"><h2>Stopwatches</h2><span class="small" id="runningCount">0 running</span></div>
+ <div class="card">
+  <div class="rowstart" style="margin-bottom:14px"><div style="font-size:32px;color:var(--accent)">◷</div><div><h3 id="timerSummary">Nothing running</h3><div class="muted">Each medication session has its own stopwatch</div></div></div>
+  <button style="width:100%;font-size:17px" onclick="openChooser()">▶ &nbsp; Start new stopwatch</button>
+  <div id="timerList" style="margin-top:12px"></div>
+  <button class="secondary" style="width:100%;margin-top:10px" onclick="stopAll()" id="stopAllBtn" disabled>■ &nbsp; Stop all existing stopwatches</button>
+  <p class="small" style="margin-top:15px">Selecting a medication records it as taken, deducts the corresponding tablets and starts its stopwatch. Each timer runs independently.</p>
+ </div>
+ <div class="notice">Only select a medication after you have actually taken it. Starting a stopwatch creates a dose record immediately.</div>
+</section>
+<section id="stock" class="page">
+ <h2>Stock</h2>
+ <div class="card"><h3 class="muted">Capsules / tablets left</h3>
+  <div class="medline row"><span>40mg Medikinet</span><b class="qty" id="topMedikinet">0</b></div>
+  <div class="medline row"><span>10mg Ritalin</span><b class="qty" id="topR10">0</b></div>
+  <div class="medline row"><span>20mg Ritalin equivalent</span><b class="qty" id="topR20">0</b></div>
+ </div>
+ <div class="card"><h2>Inventory</h2><div class="seg"><button id="addMode" class="active" onclick="setMode('add')">Add supply</button><button id="setMode" onclick="setMode('set')">Set exact count</button></div>
+  <label>Type</label><select id="stockType"><option value="medikinet">40mg Medikinet</option><option value="ritalin10">10mg Ritalin</option></select>
+  <label id="stockAmountLabel">Capsules / tablets received</label><input id="stockAmount" type="number" min="0" step="1" placeholder="Enter quantity">
+  <label>Note (optional)</label><input id="stockNote" placeholder="e.g. New supply or recount">
+  <button style="width:100%;margin-top:14px" onclick="saveStock()">Confirm inventory</button>
+ </div>
+ <div class="card"><h2>Inventory activity</h2><div id="stockHistory" class="small">No stock changes yet.</div></div>
+ <div class="notice">20mg Ritalin uses two 10mg tablets. The 20mg figure above is an equivalent count derived from the 10mg tablet stock; it is not a separate stock supply.</div>
+</section>
+<section id="calendar" class="page">
+ <div class="card"><div class="row" style="margin-bottom:15px"><button class="secondary" onclick="moveMonth(-1)">‹</button><h2 id="monthName" style="margin:0"></h2><button class="secondary" onclick="moveMonth(1)">›</button></div>
+  <div class="calendar" id="calGrid"></div><hr><h3 id="dayTitle"></h3><div id="dayDetail" class="small"></div>
+ </div>
+</section>
+<section id="outlook" class="page">
+ <h2>Outlook</h2>
+ <div class="card"><h3>Recent intake</h3><div class="seg"><button class="active" data-days="3" onclick="setPeriod(3)">3 days</button><button data-days="7" onclick="setPeriod(7)">7 days</button><button data-days="14" onclick="setPeriod(14)">14 days</button></div>
+  <div id="intakeStats"></div>
+ </div>
+ <div class="card"><h3>Projected stock outlook</h3><div id="forecast"></div></div>
+ <div class="notice">Forecasts are descriptive inventory estimates based on recorded use, not advice about what or when to take. Missing records can make estimates inaccurate. The 20mg Ritalin option consumes two 10mg tablets.</div>
+</section>
+</main>
+<nav>
+ <button class="active" data-page="stopwatches" onclick="showPage('stopwatches')"><span class="ico">◷</span>Stopwatches</button>
+ <button data-page="stock" onclick="showPage('stock')"><span class="ico">▣</span>Stock</button>
+ <button data-page="calendar" onclick="showPage('calendar')"><span class="ico">▦</span>Calendar</button>
+ <button data-page="outlook" onclick="showPage('outlook')"><span class="ico">⌁</span>Outlook</button>
+</nav>
+<div id="chooser" style="display:none;position:fixed;inset:0;background:#000b;z-index:20;align-items:flex-end">
+ <div style="background:#1d1d1f;border-radius:24px 24px 0 0;padding:22px 18px calc(24px + env(safe-area-inset-bottom));width:100%;max-width:760px;margin:auto">
+  <div class="row"><h2>Start new stopwatch</h2><button class="ghost" onclick="closeChooser()">✕</button></div>
+  <p class="small">Select the medication you have just taken. This immediately records the dose, updates stock and starts its timer.</p>
+  <div class="stack" style="gap:10px;margin-top:16px">
+   <button style="width:100%" onclick="startDose('medikinet')">40mg Medikinet　›</button>
+   <button style="width:100%" onclick="startDose('ritalin10')">10mg Ritalin　›</button>
+   <button style="width:100%" onclick="startDose('ritalin20')">20mg Ritalin　›</button>
+  </div>
+ </div>
+</div>
+<script>
+const KEY='medtrack_v3_data';
+const defaults={stock:{medikinet:0,ritalin10:0},entries:[],stockEvents:[],timers:[]};
+let data;try{data=JSON.parse(localStorage.getItem(KEY))||structuredClone(defaults)}catch(e){data=structuredClone(defaults)}
+data.stock=data.stock||{medikinet:0,ritalin10:0};data.entries=data.entries||[];data.stockEvents=data.stockEvents||[];data.timers=data.timers||[];
+const TYPES={medikinet:{label:'40mg Medikinet',units:1,stock:'medikinet'},ritalin10:{label:'10mg Ritalin',units:1,stock:'ritalin10'},ritalin20:{label:'20mg Ritalin',units:2,stock:'ritalin10'}};
+const $=id=>document.getElementById(id);const uid=()=>crypto.randomUUID();const now=()=>new Date().toISOString();
+function save(){localStorage.setItem(KEY,JSON.stringify(data))}
+function dateKey(v){let d=new Date(v);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function fmt(v){return new Date(v).toLocaleString(undefined,{dateStyle:'medium',timeStyle:'short'})}
+function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===id));document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===id));if(id==='calendar')renderCalendar();if(id==='outlook')renderOutlook()}
+function openChooser(){$('chooser').style.display='flex'}function closeChooser(){$('chooser').style.display='none'}
+function startDose(type){
+ const t=TYPES[type],available=data.stock[t.stock];if(available<t.units){alert('Not enough stock recorded for '+t.label+'. Please check your inventory first.');return}
+ const started=now(),entry={id:uid(),type,label:t.label,units:t.units,stockKey:t.stock,date:started,timerId:null};
+ const timer={id:uid(),entryId:entry.id,type,label:t.label,startedAt:started,stoppedAt:null};
+ entry.timerId=timer.id;data.stock[t.stock]-=t.units;data.entries.push(entry);data.timers.push(timer);
+ data.stockEvents.push({id:uid(),date:started,label:t.label,delta:-t.units,stockKey:t.stock,reason:'Automatically deducted when stopwatch started'});
+ save();closeChooser();renderAll();showPage('stopwatches');
+}
+function elapsed(t){return Math.max(0,((t.stoppedAt?new Date(t.stoppedAt).getTime():Date.now())-new Date(t.startedAt).getTime()))}
+function timeText(ms){let s=Math.floor(ms/1000);return [Math.floor(s/3600),Math.floor(s/60)%60,s%60].map(x=>String(x).padStart(2,'0')).join(':')}
+function stopTimer(id){let t=data.timers.find(x=>x.id===id);if(!t||t.stoppedAt)return;t.stoppedAt=now();save();renderAll()}
+function stopAll(){data.timers.forEach(t=>{if(!t.stoppedAt)t.stoppedAt=now()});save();renderAll()}
+function renderTimers(){
+ let running=data.timers.filter(t=>!t.stoppedAt);$('runningCount').textContent=running.length+' running';$('timerSummary').textContent=running.length?running.length+' stopwatch'+(running.length===1?'':'es')+' running':'Nothing running';$('stopAllBtn').disabled=!running.length;
+ $('timerList').innerHTML=data.timers.slice().sort((a,b)=>new Date(b.startedAt)-new Date(a.startedAt)).map(t=>`<div class="timer"><div class="row"><div class="stack"><b>${t.label}</b><span class="small">${fmt(t.startedAt)}${t.stoppedAt?' · Stopped '+new Date(t.stoppedAt).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}):' · Running'}</span></div><span class="clock" data-clock="${t.id}">${timeText(elapsed(t))}</span></div><div class="row" style="margin-top:9px"><span class="pill">${t.stoppedAt?'Stopped':'Running'}</span>${t.stoppedAt?'':`<button class="secondary" onclick="stopTimer('${t.id}')">Stop this stopwatch</button>`}</div></div>`).join('')||'<p class="small">No stopwatch sessions yet.</p>';
+}
+function setMode(mode){$('addMode').classList.toggle('active',mode==='add');$('setMode').classList.toggle('active',mode==='set');$('stockAmountLabel').textContent=mode==='add'?'Capsules / tablets received':'Exact number currently in stock';$('stockAmount').dataset.mode=mode}
+function saveStock(){let key=$('stockType').value,n=Number($('stockAmount').value),mode=$('stockAmount').dataset.mode||'add';if(!Number.isInteger(n)||n<0){alert('Enter a whole number of tablets/capsules.');return}let before=data.stock[key],after=mode==='set'?n:before+n,delta=after-before;data.stock[key]=after;data.stockEvents.push({id:uid(),date:now(),label:key==='medikinet'?'40mg Medikinet':'10mg Ritalin',delta,stockKey:key,reason:$('stockNote').value.trim()||(mode==='set'?'Exact count set':'Supply added')});$('stockAmount').value='';$('stockNote').value='';save();renderAll()}
+function renderStock(){$('topMedikinet').textContent=data.stock.medikinet;$('topR10').textContent=data.stock.ritalin10;$('topR20').textContent=Math.floor(data.stock.ritalin10/2);$('stockHistory').innerHTML=data.stockEvents.slice().sort((a,b)=>new Date(b.date)-new Date(a.date)).map(e=>`<div class="medline"><div class="row"><b>${e.label}</b><b>${e.delta>0?'+':''}${e.delta}</b></div><div>${fmt(e.date)} · ${e.reason}</div></div>`).join('')||'No stock changes yet.'}
+let month=new Date(),selected=dateKey(new Date());
+function moveMonth(n){month=new Date(month.getFullYear(),month.getMonth()+n,1);renderCalendar()}
+function selectDate(k){selected=k;renderCalendar()}
+function renderCalendar(){let y=month.getFullYear(),m=month.getMonth(),first=new Date(y,m,1),offset=first.getDay(),days=new Date(y,m+1,0).getDate();$('monthName').textContent=first.toLocaleDateString(undefined,{month:'long',year:'numeric'});let s=['S','M','T','W','T','F','S'].map(x=>`<div class="small" style="text-align:center">${x}</div>`).join('');for(let i=0;i<offset;i++)s+='<div class="day blank"></div>';for(let d=1;d<=days;d++){let k=dateKey(new Date(y,m,d)),has=data.entries.some(e=>dateKey(e.date)===k);s+=`<button class="day ${has?'has':''} ${selected===k?'selected':''}" onclick="selectDate('${k}')">${d}</button>`}$('calGrid').innerHTML=s;let dt=new Date(selected+'T12:00:00');$('dayTitle').textContent=dt.toLocaleDateString(undefined,{weekday:'long',day:'numeric',month:'long',year:'numeric'});let es=data.entries.filter(e=>dateKey(e.date)===selected).sort((a,b)=>new Date(a.date)-new Date(b.date));$('dayDetail').innerHTML=es.map(e=>`<div class="medline"><div class="row"><b>${e.label}</b><span>${e.units} ${e.stockKey==='medikinet'?'capsule':'Ritalin tablet(s)'}</span></div><div>${new Date(e.date).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})} · Stopwatch ${data.timers.find(t=>t.id===e.timerId)?.stoppedAt?'stopped':'started'}</div></div>`).join('')||'No medication recorded for this day.'}
+let period=3;function setPeriod(n){period=n;document.querySelectorAll('[data-days]').forEach(b=>b.classList.toggle('active',Number(b.dataset.days)===n));renderOutlook()}
+function consumption(key,days){let start=new Date();start.setHours(0,0,0,0);start.setDate(start.getDate()-days+1);let es=data.entries.filter(e=>e.stockKey===key&&new Date(e.date)>=start);let total=es.reduce((s,e)=>s+e.units,0),daysWith=new Set(es.map(e=>dateKey(e.date))).size;return {total,avg:total/days,daysWith}}
+function renderOutlook(){let med=consumption('medikinet',period),rit=consumption('ritalin10',period);$('intakeStats').innerHTML=[['40mg Medikinet',med],['Ritalin 10mg tablets (including 20mg entries)',rit]].map(([name,v])=>`<div class="medline"><b>${name}</b><div class="row" style="margin-top:7px"><span class="muted">Recorded average</span><b>${v.avg.toFixed(2)} units/day</b></div><div class="row"><span class="muted">Days with records</span><b>${v.daysWith} of ${period}</b></div></div>`).join('');
+ $('forecast').innerHTML=[{key:'medikinet',name:'40mg Medikinet'},{key:'ritalin10',name:'10mg Ritalin tablets'}].map(x=>{let v=consumption(x.key,Math.min(30,Math.max(1,data.entries.length?30:1))),stock=data.stock[x.key],date=v.avg>0&&stock>0?new Date(Date.now()+Math.ceil(stock/v.avg)*86400000):null;return `<div class="medline"><b>${x.name}</b><div class="row"><span class="muted">Current stock</span><b>${stock}</b></div><div class="row"><span class="muted">Recorded average (30-day window)</span><b>${v.avg.toFixed(2)}/day</b></div><div class="row"><span class="muted">Projected stock date</span><b>${date?date.toLocaleDateString():'Not enough data'}</b></div></div>`}).join('')}
+function renderAll(){renderTimers();renderStock();renderCalendar();renderOutlook()}
+$('dateHeading').textContent=new Date().toLocaleDateString(undefined,{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+setMode('add');renderAll();setInterval(()=>{document.querySelectorAll('[data-clock]').forEach(el=>{let t=data.timers.find(x=>x.id===el.dataset.clock);if(t&&!t.stoppedAt)el.textContent=timeText(elapsed(t))})},250);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)document.querySelectorAll('[data-clock]').forEach(el=>{let t=data.timers.find(x=>x.id===el.dataset.clock);if(t)el.textContent=timeText(elapsed(t))})});
+if('serviceWorker'in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});
+</script></body></html>
